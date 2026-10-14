@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>村口的银杏</title>
+<link rel="stylesheet" href="node_modules/@fontsource/noto-serif-sc/600.css">
+<link rel="stylesheet" href="node_modules/@fontsource/noto-serif-sc/700.css">
+<link rel="stylesheet" href="node_modules/@fontsource/noto-serif-sc/900.css">
+<link rel="stylesheet" href="node_modules/@fontsource/cormorant-garamond/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/cormorant-garamond/500-italic.css">
+<link rel="stylesheet" href="node_modules/@fontsource/cormorant-garamond/600.css">
+<style>
+  html, body { margin: 0; background: #000; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #c { position: absolute; inset: 0; width: 1080px; height: 1920px; display: block; }
+  #ui { position: absolute; inset: 0; color: #fff; font-family: 'Noto Serif SC', serif; pointer-events: none; }
+  .sh { text-shadow: 0 2px 16px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.55); }
+  .en-font { font-family: 'Cormorant Garamond', serif; }
+
+  #chapter { position: absolute; left: 58px; top: 182px; display: flex; align-items: center; gap: 16px; }
+  #chapter .num { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 28px; line-height: 1;
+    background: #e4572e; padding: 5px 11px 6px; border-radius: 6px; letter-spacing: .04em; box-shadow: 0 2px 10px rgba(0,0,0,.25); }
+  #chapter .txt { display: flex; flex-direction: column; gap: 2px; }
+  #chapter .cn { font-size: 33px; font-weight: 600; line-height: 1.1; }
+  #chapter .en { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 18px; letter-spacing: .34em; opacity: .78; }
+
+  #season { position: absolute; right: 58px; top: 178px; text-align: right; }
+  #season .row { font-size: 33px; font-weight: 600; line-height: 1.15; }
+  #season .en { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 18px; letter-spacing: .32em; opacity: .78; margin-top: 3px; }
+
+  #year { position: absolute; left: 0; right: 0; top: 262px; height: 150px; display: flex; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 158px; line-height: 150px;
+    font-variant-numeric: lining-nums tabular-nums; }
+  #year .digit { height: 150px; width: 82px; overflow: hidden; position: relative; }
+  #year .strip { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
+  #year .strip span { display: block; height: 150px; text-align: center; }
+  #year .fade { position: absolute; inset: 0; }
+
+  #timeline { position: absolute; left: 50%; top: 432px; width: 470px; margin-left: -235px; height: 30px;
+    font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; letter-spacing: .08em; }
+  #timeline .l, #timeline .r { position: absolute; top: 0; opacity: .85; }
+  #timeline .l { left: 0; } #timeline .r { right: 0; }
+  #timeline .bar { position: absolute; left: 74px; right: 74px; top: 14px; height: 2px; background: rgba(255,255,255,.35); border-radius: 2px; }
+  #timeline .fill { position: absolute; left: 0; top: 0; bottom: 0; background: #ffd27a; border-radius: 2px; }
+  #timeline .dot { position: absolute; top: -5px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: #ffd27a;
+    box-shadow: 0 0 12px rgba(255,200,90,.9); }
+
+  #subs { position: absolute; left: 50px; right: 50px; top: 1262px; }
+  .sub { position: absolute; left: 0; right: 0; top: 0; text-align: center; opacity: 0; }
+  .sub .cn { font-size: 56px; font-weight: 700; line-height: 1.38; letter-spacing: .02em; white-space: pre-line; }
+  .sub .cn span { display: inline-block; }
+  .sub .en { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; font-size: 34px; line-height: 1.3;
+    margin-top: 12px; opacity: .9; white-space: pre-line; }
+
+  #hook { position: absolute; left: 0; right: 0; top: 560px; text-align: center; }
+  #hook .l1 { font-size: 66px; font-weight: 700; letter-spacing: .06em; }
+  #hook .l2 { font-size: 92px; font-weight: 900; margin-top: 6px; letter-spacing: .04em; }
+  #hook .big { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 210px; line-height: .9; vertical-align: -20px; color: #ffd75e; padding: 0 8px;
+    text-shadow: 0 4px 24px rgba(0,0,0,.55), 0 0 40px rgba(255,190,60,.35); }
+  #hookShade { position: absolute; left: -10%; right: -10%; top: 470px; height: 560px; background: radial-gradient(ellipse at center, rgba(0,0,0,.42), rgba(0,0,0,0) 70%); opacity: 0; }
+  #hook .en { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 36px; margin-top: 18px; opacity: .92; }
+
+  #rewind { position: absolute; left: 0; right: 0; top: 760px; text-align: center; font-size: 60px; font-weight: 900; letter-spacing: .12em; opacity: 0; }
+  #rewind .ico { font-family: 'Cormorant Garamond', serif; letter-spacing: -.1em; margin-right: 18px; color: #ffd27a; }
+
+  #endcard { position: absolute; left: 0; right: 0; top: 700px; text-align: center; opacity: 0; }
+  #endcard .t { font-size: 104px; font-weight: 900; letter-spacing: .14em; }
+  #endcard .d { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 600; letter-spacing: .3em; margin-top: 14px; color: #ffe2a0; }
+  #shadeTop { position: absolute; left: 0; right: 0; top: 0; height: 620px; background: linear-gradient(180deg, rgba(0,0,0,.34), rgba(0,0,0,0)); }
+  #shadeBot { position: absolute; left: 0; right: 0; top: 1120px; height: 800px; background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.30) 35%, rgba(0,0,0,.30) 70%, rgba(0,0,0,0)); }
+  #flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "./node_modules/three/build/three.module.js", "three/addons/": "./node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="stage">
+  <canvas id="c"></canvas>
+  <div id="ui">
+    <div id="shadeTop"></div><div id="shadeBot"></div>
+    <div id="chapter" class="sh"><span class="num">01</span><span class="txt"><span class="cn">种子</span><span class="en">SEED</span></span></div>
+    <div id="season" class="sh"><div class="row">春 · 树龄 0 年</div><div class="en">SPRING · AGE 0</div></div>
+    <div id="year" class="sh"></div>
+    <div id="timeline" class="sh"><span class="l">1925</span><div class="bar"><div class="fill"></div><div class="dot"></div></div><span class="r">2025</span></div>
+    <div id="subs"></div>
+    <div id="hookShade"></div>
+    <div id="hook" class="sh">
+      <div class="l1">村口这棵银杏树</div>
+      <div class="l2">今年<span class="big">100</span>岁了</div>
+      <div class="en">This ginkgo by the village gate turns 100 this year.</div>
+    </div>
+    <div id="rewind" class="sh"><span class="ico">◀◀</span>倒回 1925</div>
+    <div id="endcard" class="sh"><div class="t">村口的银杏</div><div class="d">1925 — 2025</div></div>
+    <div id="flash"></div>
+  </div>
+</div>
+<script type="module" src="./scene.js"></script>
+</body>
+</html>
